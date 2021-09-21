@@ -2,6 +2,18 @@ var repoNameEl = document.querySelector("#repo-name");
 var issueContainerEl = document.querySelector("#issues-container");
 var limitWarningEl = document.querySelector("#limit-warning");
 
+var getRepoName = function() {
+    var queryString = document.location.search;
+    var repoName = queryString.split("=")[1];
+    if(repoName) {
+        repoNameEl.textContent = repoName;
+        getRepoIssues(repoName);
+    }
+    else {
+        document.location.replace("./index.html");
+    }
+};
+
 var getRepoIssues = function(repo) {
 
     var apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc";
@@ -27,8 +39,6 @@ var displayIssues = function(issues) {
         issueContainerEl.textContent = "This repo has no open issues!";
         return;
     }
-
-    issueContainerEl.appendChild(issueEl);
 
     for (var i = 0; i < issues.length; i++) {
         var issueEl = document.createElement("a");
@@ -68,16 +78,4 @@ var displayWarning = function(repo) {
     limitWarningEl.appendChild(linkEl);
 };
 
-var getRepoName = function() {
-    var queryString = document.location.search;
-    var repoName = queryString.split("=")[1];
-    if(repoName) {
-        repoNameEl.textContent = repoName;
-        getRepoIssues(repoName);
-    }
-    else {
-        document.location.replace("./index.html");
-    }
-}
-
-getRepoIssues("facebook/react");
+getRepoIssues();
